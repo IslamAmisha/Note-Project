@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <style>
+        body{
+            background-color: antiquewhite;
+        }
+        .note {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+
+<h1>My Notes</h1>
+
+<input type="text" id="note-input" placeholder="Enter a note" style="background-color: rgba(155, 154, 154, 0.258);">
+<button onclick="addNote()" style="color: blue;background-color: azure; border-radius: 5px;">Add Note</button>
+
+<div id="notes-container"></div>
+
+<script>
+    // Function to display saved notes from localStorage
+function displayNotes()
+ {
+    const notesContainer = document.getElementById('notes-container');
+    notesContainer.innerHTML = ''; // Clear existing notes
+
+    // Retrieve notes from localStorage
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+    // Display each note
+    notes.forEach((note, index) => {
+        const noteElement = document.createElement('div');
+        noteElement.classList.add('note');
+        noteElement.innerHTML = `
+            <div class="note-content">${note}</div>
+            <button onclick="deleteNote(${index})" class="delete-btn">Delete</button>
+        `;
+        notesContainer.appendChild(noteElement);
+    });
+}
+
+// Function to add a new note
+function addNote() {
+    const noteInput = document.getElementById('note-input');
+    const note = noteInput.value.trim();
+
+    if (note) {
+        // Retrieve existing notes from localStorage
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+        // Add new note to the array
+        notes.push(note);
+
+        // Save updated notes back to localStorage
+        localStorage.setItem('notes', JSON.stringify(notes));
+
+        // Clear input field and display updated notes
+        noteInput.value = '';
+        displayNotes();
+    }
+}
+
+// Function to delete a note
+function deleteNote(index) {
+    // Retrieve existing notes from localStorage
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+    // Remove note at the specified index
+    notes.splice(index, 1);
+
+    // Save updated notes back to localStorage
+    localStorage.setItem('notes', JSON.stringify(notes));
+
+    // Display updated notes
+    displayNotes();
+}
+
+// Initial display of notes when the page loads
+displayNotes();
+
+</script>
+
+</body>
+</html>
